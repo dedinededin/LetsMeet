@@ -1,0 +1,130 @@
+{% extends 'main/base.html' %}
+{% block content %}
+
+
+
+
+    <div class="container">
+        {% if next %}
+            <p>You can't access that page.</p>
+        {% endif %}
+
+        {% if next %}
+            <p>You can't access that page.</p>
+        {% endif %}
+
+        <form class="well form-horizontal" method="post" action="{% url 'register' %}">
+            {% csrf_token %}
+            {% if form.errors %}
+                <p>There's something wrong with what you entered!</p>
+            {% endif %}
+            <fieldset>
+
+                <!-- Form Name -->
+                <legend>
+                    <center><h2><b>Registration Form</b></h2></center>
+                </legend>
+                <br>
+
+                <!-- Text input-->
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label">First Name</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input name="first_name" placeholder="First Name" class="form-control" type="text">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text input-->
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Last Name</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input name="last_name" placeholder="Last Name" class="form-control" type="text">
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Text input-->
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Username</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input name="username" placeholder="Username" class="form-control" type="text">
+                            {% if form.username.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ form.username.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text input-->
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Password</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input name="password1" placeholder="Password" class="form-control" type="password">
+                            {% if form.password1.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ form.password1.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text input-->
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Confirm Password</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input name="password2" placeholder="Confirm Password" class="form-control"
+                                   type="password">
+                            {% if form.password2.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ form.password2.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">E-Mail</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                            <input name="email" placeholder="E-Mail Address" class="form-control" type="text">
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Button -->
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <input type="submit" id="singlebutton" value="Sign Up" class="btn btn-success"/>
+                        <input type="hidden" name="next" value="{{ next }}">
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
+    </div>
+    <!-- /.container -->
+{% endblock %}
