@@ -12,6 +12,12 @@
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     {% block style %}
     {% endblock %}
+    <style>
+        body {
+            background: antiquewhite;
+        }
+
+    </style>
     <title>Hello, world!</title>
 </head>
 <body>
@@ -44,8 +50,8 @@
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         {% if user.is_superuser %}
                             <a class="dropdown-item" href="/admin">Admin Panel</a>
-                            {% endif %}
-                        <a class="dropdown-item" href="#">Profile Settings</a>
+                        {% endif %}
+                        <a class="dropdown-item" href="{% url 'profile' %}">Profile Settings</a>
                         <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                     </div>
                 </div>
@@ -94,8 +100,9 @@
 
                     </div>
                 </div>
-                </div>
                 </ul>
+                </div>
+
             {% endif %}
 
 
