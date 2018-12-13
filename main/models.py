@@ -32,4 +32,4 @@ class Event(models.Model):
     url = models.CharField(max_length=500, blank=True, null=True)
 
     def __str__(self):
-        return self.title
+        return self.title + " @" + self.owner.profile.user.username

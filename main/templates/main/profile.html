@@ -1,0 +1,53 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <img class="user" width="250px" src="{{ user.profile.image.url }}">
+                    </div>
+                    <div class="col-md-9">
+                        <h2>{{ user.profile.first_name }} {{ user.profile.last_name }}</h2>
+                        <a href="{{ user.username }}">
+                            <h3>@{{ user.username }}</h3>
+                        </a>
+                        <p class="text-secondary">{{ user.email }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <h4>{{ user.profile.first_name }}' Friends:</h4>
+                {% for friend in friends %}
+                    <a href="{{ friend.user.username }}">
+                        <img src="{{ friend.image.url }}" width="50px">{{ friend.first_name }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        {{ name }}'in etkinlikleri
+        <div class="row">
+
+
+            {% for event in events %}
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header">{{ event.title }} <br> Tarih: {{ event.time }} </div>
+                        <div class="card-body">Katılanlar:<br>
+                            {% for participant in event.participants.all %}
+                                <a href="{{ participant.user.username }}">
+                                    <img src="{{ participant.image.url }}" width="25px">{{ participant.first_name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+
+
+    </div>
+{% endblock %}

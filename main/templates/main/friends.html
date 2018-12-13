@@ -9,7 +9,7 @@
 {% endblock %}
 <!---->
 {% block content %}
-    <br>
+
     <div class="container">
         {% for friend in Friends %}
             <div class="card">
@@ -20,7 +20,9 @@
                         </div>
                         <div class="col-md-9">
                             <h2>{{ friend.first_name }} {{ friend.last_name }}</h2>
-                            <h3 class="text-secondary">@{{ friend.user.username }}</h3>
+                            <a href="{{ friend.user.username }}">
+                                <h3>@{{ friend.user.username }}</h3>
+                            </a>
                             <p class="text-secondary">{{ friend.user.email }}</p>
                         </div>
                     </div>

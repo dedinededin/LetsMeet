@@ -8,4 +8,5 @@ urlpatterns = [
     path('explore', views.explore, name='explore'),
     path('myprofile', views.myprofile, name='myprofile'),
     path('friends', views.friends, name='friends'),
+    path('<slug:username>', views.profile, name='profile')
 ]

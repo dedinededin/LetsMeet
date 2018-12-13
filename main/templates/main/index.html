@@ -2,28 +2,6 @@
 
 {% block content %}
     <div class="container">
-        {{ name }}'in arkadaşları:
-        {% for friend in friends %}
-            {{ friend.first_name }},
-        {% endfor %}<br>
-        {{ name }}'in etkinlikleri
-        <div class="row">
-
-
-        {% for event in events %}
-            <div class="col-md-3">
-            <div class="card">
-                <div class="card-header">{{ event.title }} <br> Tarih: {{ event.time }} </div>
-                <div class="card-body">Katılanlar:<br>
-                    {% for participants in event.participants.all %}
-                        {{ participants.first_name }}
-                    {% endfor %}
-                </div>
-
-            </div>
-
-            </div>
-        {% endfor %}
-</div>
+        {{ newEvent.as_p }}
     </div>
 {% endblock %}
