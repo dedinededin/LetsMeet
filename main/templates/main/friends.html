@@ -1,0 +1,38 @@
+{% extends "main/base.html" %}
+{% block style %}
+    <style>
+        .user {
+            border-radius: 5px;
+            border-style: groove;
+        }
+    </style>
+{% endblock %}
+<!---->
+{% block content %}
+    <br>
+    <div class="container">
+        {% for friend in Friends %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img class="user" width="250px" src="{{ friend.image.url }}">
+                        </div>
+                        <div class="col-md-9">
+                            <h2>{{ friend.first_name }} {{ friend.last_name }}</h2>
+                            <h3 class="text-secondary">@{{ friend.user.username }}</h3>
+                            <p class="text-secondary">{{ friend.user.email }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        {% endfor %}
+    </div>
+
+
+
+
+
+
+{% endblock content %}

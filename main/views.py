@@ -75,7 +75,7 @@ def explore(request):
 
 
 @login_required
-def profile(request):
+def myprofile(request):
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST,
@@ -95,4 +95,11 @@ def profile(request):
         'p_form': p_form
     }
 
-    return render(request, 'main/profile.html', context)
+    return render(request, 'main/myprofile.html', context)
+
+
+def friends(request):
+    friends = request.user.profile.friends.all()
+
+    context = {'friends': 'active', 'Friends': friends}
+    return render(request, 'main/friends.html', context)

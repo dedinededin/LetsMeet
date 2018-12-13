@@ -36,6 +36,7 @@
 
                 <a class="nav-item nav-link {{ events }}" href="{% url 'events' %}">Events</a>
                 <a class="nav-item nav-link {{ explore }}" href="{% url 'explore' %}">Explore</a>
+                <a class="nav-item nav-link {{ friends }}" href="{% url 'friends' %}">Friends</a>
             </ul>
         </div>
 
@@ -51,7 +52,7 @@
                         {% if user.is_superuser %}
                             <a class="dropdown-item" href="/admin">Admin Panel</a>
                         {% endif %}
-                        <a class="dropdown-item" href="{% url 'profile' %}">Profile Settings</a>
+                        <a class="dropdown-item" href="{% url 'myprofile' %}">Profile Settings</a>
                         <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                     </div>
                 </div>
