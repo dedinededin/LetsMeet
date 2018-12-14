@@ -25,10 +25,12 @@ class EventOwner(models.Model):
 
 class Event(models.Model):
     time = models.DateTimeField()
+    createdTime = models.DateTimeField(null=True)
     title = models.CharField(max_length=50)
     owner = models.ForeignKey(EventOwner, on_delete=models.CASCADE, null=True)
+    location = models.CharField(max_length=150)
     participants = models.ManyToManyField(Profile, blank=True)
-    description = models.CharField(max_length=500, null=True)
+    description = models.TextField(blank=True,null=True)
     url = models.CharField(max_length=500, blank=True, null=True)
 
     def __str__(self):

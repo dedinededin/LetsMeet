@@ -2,6 +2,54 @@
 
 {% block content %}
     <div class="container">
-        {{ newEvent.as_p }}
+        <div class="row">
+
+
+            <div class="col-md-3">
+                <div class="card">
+                    <img class="card-img-top" width="100%" src="{{ user.profile.image.url }}">
+                    <div class="card-body">
+
+                        <p>{{ user.profile.first_name }} {{ user.profile.last_name }}</p>
+                        <p class="text-secondary">@{{ user.username }}</p>
+                        <p class="text-secondary">{{ user.email }}</p>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                {% for event in events %}
+                    <div class="card">
+
+                        <div class="card-header">
+                            Sahibi : {{ event.owner.profile.first_name }}<br>{{ event.title }} <br>
+                            Tarih: {{ event.time }} </div>
+                        <div class="card-body">Katılanlar:<br>
+                            {% for participant in event.participants.all %}
+                                {{ participant.first_name }} {{ participant.last_name }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <br>
+                {% endfor %}
+
+            </div>
+            <div class="col-md-3">
+                {% for event in eventUserParticipate %}
+                    <div class="card">
+
+                        <div class="card-header">
+                            Sahibi : {{ event.owner.profile.first_name }}<br>{{ event.title }} <br>
+                            Tarih: {{ event.time }} </div>
+                        <div class="card-body">Katılanlar:<br>
+                            {% for participant in event.participants.all %}
+                                {{ participant.first_name }} {{ participant.last_name }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <br>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 {% endblock %}

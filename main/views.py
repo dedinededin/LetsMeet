@@ -12,12 +12,16 @@ from django.shortcuts import get_object_or_404
 
 def index(request):
     if request.user.is_authenticated:
-        newEvent = NewEventForm()
-        context = {'home': 'active', 'newEvent': newEvent}
+        events = Event.objects.all()
+
+        eventUserParticipate = Event.objects.filter(participants=request.user.profile)
+
+        context = {'home': 'active', 'events': events, 'eventUserParticipate': eventUserParticipate}
+
         return render(request, 'main/index.html', context)
     else:
-        context = {'home': 'active'}
-        return render(request, 'main/index.html', context)
+
+        return render(request, 'main/welcome.html')
 
 
 def events(request):
