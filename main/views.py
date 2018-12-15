@@ -14,9 +14,9 @@ def index(request):
     if request.user.is_authenticated:
         events = Event.objects.all()
 
-        eventUserParticipate = Event.objects.filter(participants=request.user.profile)
+        eventsUserParticipate = Event.objects.filter(participants=request.user.profile)
 
-        context = {'home': 'active', 'events': events, 'eventUserParticipate': eventUserParticipate}
+        context = {'home': 'active', 'events': events, 'eventsUserParticipate': eventsUserParticipate}
 
         return render(request, 'main/index.html', context)
     else:
@@ -24,6 +24,7 @@ def index(request):
         return render(request, 'main/welcome.html')
 
 
+@login_required
 def events(request):
     if request.user.is_authenticated:
         profile = request.user.profile
@@ -31,7 +32,7 @@ def events(request):
         owner_friends = EventOwner.objects.filter(profile__in=friends)
         events = Event.objects.filter(owner__in=owner_friends.all())
 
-        context = {'events': 'active', 'events': events}
+        context = {'events': 'active', 'Events': events}
         return render(request, 'main/events.html', context)
 
     else:
@@ -69,6 +70,7 @@ def register(request):
     return render(request, 'registration/register.html', context)
 
 
+@login_required
 def explore(request):
     films = get_films()
     films_up = films[:5]
@@ -78,7 +80,7 @@ def explore(request):
 
 
 @login_required
-def myprofile(request):
+def updateProfile(request):
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST,
@@ -87,20 +89,10 @@ def myprofile(request):
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
-            return redirect('myprofile')
-
-    else:
-        u_form = UserUpdateForm(instance=request.user)
-        p_form = ProfileUpdateForm(instance=request.user.profile)
-
-    context = {
-        'u_form': u_form,
-        'p_form': p_form
-    }
-
-    return render(request, 'main/myprofile.html', context)
+            return redirect('profile', username=request.user.username)
 
 
+@login_required
 def friends(request):
     friends = request.user.profile.friends.all()
     context = {'friends': 'active', 'Friends': friends}
@@ -108,15 +100,20 @@ def friends(request):
 
 
 def profile(request, username):
-    if request.user.is_authenticated:
-        user = get_object_or_404(User, username=username)
-        profile = user.profile
-        friends = profile.friends.all()
-        owner = EventOwner.objects.filter(profile=user.profile)
-        events = Event.objects.filter(owner__in=owner)
-        context = {'home': 'active', 'user': user, 'friends': friends, 'events': events,
-                   'name': profile.first_name + " " + profile.last_name}
-        return render(request, 'main/profile.html', context)
-    else:
-        context = {'home': 'active'}
-        return render(request, 'main/profile.html', context)
+    user = get_object_or_404(User, username=username)
+    profile = user.profile
+    friends = profile.friends.all()
+    owner = EventOwner.objects.filter(profile=user.profile)
+    events = Event.objects.filter(owner__in=owner)
+    context = {'home': 'active', 'User': user, 'friends': friends, 'events': events,
+               'name': profile.first_name + " " + profile.last_name}
+
+    if username == request.user.username:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+        context['u_form'] = u_form
+        context['p_form'] = p_form
+
+    return render(request, 'main/profile.html', context)
+
+

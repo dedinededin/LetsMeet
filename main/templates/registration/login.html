@@ -1,27 +1,52 @@
 {% extends 'main/base.html' %}
 {% block content %}
+    <br>
     <div class="container">
 
 
         {% if form.errors %}
-            <p>There's something wrong with what you entered!</p>
+            <div class="alert alert-danger" role="alert">
+                There's something wrong with what you entered!
+            </div>
         {% endif %}
 
         {% if next %}
-            <p>You can't access that page.</p>
+            <div class="alert alert-danger" role="alert">
+                You can't access that page. Please login.
+            </div>
+
         {% endif %}
 
-        <form method="post" action="{% url 'login' %}">
-            {% csrf_token %}
+        <div class="container">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:35px 50px;">
+                    <h4>Login</h4>
+                </div>
+                <div class="modal-body" style="padding:40px 50px;">
+                    <form method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
 
-            <input type="text" name="username" autofocus required id="id_username">
-            <input type="password" name="password" required id="id_password">
+                            <input type="text" name="username" class="form-control" id="id_username"
+                                   placeholder="Enter username">
+                        </div>
+                        <div class="form-group">
 
-            <input type="submit" value="login">
-            <input type="hidden" name="next" value="{{ next }}">
+                            <input type="password" name="password" class="form-control" id="id_password"
+                                   placeholder="Enter password">
+                        </div>
+                        <input type="hidden" name="next" value="{{ next }}">
+                        <button type="submit" value="login" class="btn btn-success btn-block"> Login
+                        </button>
+                    </form>
+                </div>
+                <div class="modal-footer">
 
-        </form>
-
+                    <p>Not a member? <a href="{% url 'register' %}">Sign Up</a></p>
+                    <p>Forgot <a href="#">Password?</a></p>
+                </div>
+            </div>
+        </div>
 
     </div>
 {% endblock %}

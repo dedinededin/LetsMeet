@@ -6,19 +6,40 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-3">
-                        <img class="user" width="250px" src="{{ user.profile.image.url }}">
+                        <img class="user" width="100%" src="{{ User.profile.image.url }}">
                     </div>
                     <div class="col-md-9">
-                        <h2>{{ user.profile.first_name }} {{ user.profile.last_name }}</h2>
-                        <a href="{{ user.username }}">
-                            <h3>@{{ user.username }}</h3>
+                        <h2>{{ User.profile.first_name }} {{ User.profile.last_name }}</h2>
+                        <a href="{{ User.username }}">
+                            <h3>@{{ User.username }}</h3>
                         </a>
-                        <p class="text-secondary">{{ user.email }}</p>
+                        <p class="text-secondary">{{ User.email }}</p>
+                    </div>
+                </div>
+                {% if User == request.user %}
+                    <div class="text-right">
+                        <a class="btn btn-primary" data-toggle="collapse" href="#collapseProfile" role="button">Edit
+                            Profile</a>
+                    </div>
+                {% endif %}
+                <div class="collapse" id="collapseProfile">
+                    <div class="card-footer">
+                        <form method="POST" action="{% url 'updateProfile' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <fieldset class="form-group">
+                                <legend class="border-bottom mb-4">Profile Info</legend>
+                                {{ u_form.as_ul }}
+                                {{ p_form.as_ul }}
+                            </fieldset>
+                            <div class="form-group">
+                                <button class="btn btn-info" type="submit">Update</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
             <div class="card-footer">
-                <h4>{{ user.profile.first_name }}' Friends:</h4>
+                <h4>{{ User.profile.first_name }}'s Friends:</h4>
                 {% for friend in friends %}
                     <a href="{{ friend.user.username }}">
                         <img src="{{ friend.image.url }}" width="50px">{{ friend.first_name }}

@@ -6,7 +6,7 @@ urlpatterns = [
     path('events', views.events, name='events'),
     path('register', views.register, name='register'),
     path('explore', views.explore, name='explore'),
-    path('myprofile', views.myprofile, name='myprofile'),
+    path('updateProfile', views.updateProfile, name='updateProfile'),
     path('friends', views.friends, name='friends'),
     path('<slug:username>', views.profile, name='profile')
 ]
