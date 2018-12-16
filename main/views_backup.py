@@ -7,8 +7,6 @@ from main.cinema_controller import get_films
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
-import datetime
-from django.utils.safestring import mark_safe
 
 
 # Create your views here.
@@ -22,7 +20,7 @@ def index(request):
         user_events = Event.objects.filter(owner=EventOwner.objects.get(profile=profile))
         events = friends_events.union(user_events)
 
-        eventsUserParticipate = Event.objects.filter(participants=request.user.profile).order_by('-time').reverse()
+        eventsUserParticipate = Event.objects.filter(participants=request.user.profile)
 
         context = {'home': 'active',
                    'events': events,
@@ -36,11 +34,19 @@ def index(request):
 
 
 @login_required
-def event(request, pk):
-    event = get_object_or_404(Event, pk=pk)
-    context = {'event': event}
+def events(request):
+    if request.user.is_authenticated:
+        profile = request.user.profile
+        friends = profile.friends.all()
+        owner_friends = EventOwner.objects.filter(profile__in=friends)
+        events = Event.objects.filter(owner__in=owner_friends.all())
 
-    return render(request, 'main/event.html', context)
+        context = {'events': 'active', 'Events': events, 'friendRequests': request.user.profile.requests()}
+        return render(request, 'main/event.html', context)
+
+    else:
+        context = {'events': 'active'}
+        return render(request, 'main/event.html', context)
 
 
 def register(request):
@@ -109,49 +115,17 @@ def profile(request, username):
     profile = user.profile
     friends = profile.friends.all()
     owner = EventOwner.objects.filter(profile=user.profile)
+    events = Event.objects.filter(owner__in=owner)
+    context = {'home': 'active', 'User': user, 'friends': friends, 'events': events,
+               'name': profile.first_name + " " + profile.last_name, 'friendRequests': request.user.profile.requests()}
 
-    context = {'home': 'active', 'User': user, 'friends': friends,
-               'name': profile.first_name + " " + profile.last_name}
+    if username == request.user.username:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+        context['u_form'] = u_form
+        context['p_form'] = p_form
 
-    if request.user.is_authenticated:
-        events = Event.objects.filter(owner__in=owner)
-        context['events'] = events
-
-        # wordList = list(filter(lambda a: a[index] == char, wordList))
-        isFriend = False
-        for friend in friends:
-            if friend == request.user.profile:
-                isFriend = True
-                break
-        print(isFriend)
-
-        if not isFriend:
-            button = '<a href="/invite/{}">' \
-                     '<button type="button" class="btn btn-primary float-right">Add Friend</button>' \
-                     '</a>'.format(profile.id)
-            context['frequestButton'] = mark_safe(button)
-        else:
-            button = '<a href="/invite/del/{}">' \
-                     '<button type="button" class="btn btn-danger float-right">Delete Friend</button>' \
-                     '</a>'.format(profile.id)
-            context['frequestButton'] = mark_safe(button)
-
-        if username == request.user.username:
-            context['frequestButton'] = ""
-            u_form = UserUpdateForm(instance=request.user)
-            p_form = ProfileUpdateForm(instance=request.user.profile)
-            context['u_form'] = u_form
-            context['p_form'] = p_form
-            context['friendRequests'] = request.user.profile.requests()
     return render(request, 'main/profile.html', context)
-
-
-@login_required()
-def addfriend(request, pk):
-    profile = get_object_or_404(Profile, pk=pk)
-    frequest = FriendRequest(from_profile=request.user.profile, to_profile=profile)
-    frequest.save()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def acceptfriend(request, pk):
@@ -160,40 +134,7 @@ def acceptfriend(request, pk):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-def deletefriend(request, pk):
-    profile = get_object_or_404(Profile, pk=pk)
-    request.user.profile.friends.delete(profile)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
 def rejectfriend(request, pk):
     to_reject = FriendRequest.objects.get(pk=pk)
     to_reject.reject()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-def join(request, pk):
-    event = get_object_or_404(Event, pk=pk)
-    event.participants.add(request.user.profile)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-def unjoin(request, pk):
-    event = get_object_or_404(Event, pk=pk)
-    event.participants.remove(request.user.profile)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-def createEvent(request):
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        location = request.POST.get('location')
-        description = request.POST.get('description')
-        time = request.POST.get('datetimepicker1')
-        time = '2018-12-15 10:30'
-        owner = EventOwner.objects.get(profile=request.user.profile)
-        event = Event(title=title, location=location, description=description, owner=owner, time=time,
-                      createdTime=datetime.datetime.now())
-        event.save()
-        print(title, location, description, time)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

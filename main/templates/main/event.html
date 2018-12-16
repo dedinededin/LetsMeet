@@ -1,0 +1,124 @@
+{% extends 'main/base.html' %}
+{% load event_extras %}
+{% load static %}
+{% block style %}
+    <style>
+
+        body {
+            background-color: #29abe2;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        span {
+            font-size: 14px;
+            font-family: 'Open Sans', sans-serif !important;
+        }
+
+        .myul {
+            display: flex;
+            align-items: stretch; /* Default */
+            justify-content: space-between;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            display: block;
+            flex: 0 1 auto; /* Default */
+            list-style-type: none;
+        }
+
+        .sm {
+            font-size: 13px;
+            color: #767676;
+            display: block;
+        }
+
+        .box {
+            background-color: whitesmoke;
+            padding: 10px;
+            margin: 0 auto;
+            max-width: 700px;
+            border-width: 1px;
+            border-radius: 5px;
+            border-style: solid;
+            border-color: #d7d7d7;
+        }
+
+        .row p {
+            margin-bottom: 0px !important;
+            padding: 20px 10px 10px 10px;
+            font-size: 13px;
+        }
+
+        hr {
+            border: 0px !important;
+        }
+
+        button {
+        }
+
+        .down {
+            float: right;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+
+            <div class="row box">
+                <div style="padding-top:10px;" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <i class="down fas fa-angle-down"></i>
+
+                    <div class="row">
+                        <div style="max-width:80px;padding-right:10px;"
+                             class="col-lg-2 col-md-62 col-sm-2 col-xs-4 ">
+                            <img src="{{ event.owner.profile.image.url }}" width="60px">
+                        </div>
+                        <div class="col-md-7">
+                                    <span class="s"
+                                          style="display: block;margin-top:0px;">{{ event.owner.profile.first_name }}</span>
+                            <span class="sm">15 ortak arkadaş</span>
+                            <a href="/event/{{ event.id }}">
+                                <span class="sm">{{ event.time }}</span>
+                            </a>
+                        </div>
+                        <div style="padding-top:10.75px;">
+
+                            {% joinbutton event request.user.profile %}
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <p>
+                            {{ event.description }}
+                        </p>
+                        <img src="{% static 'main/img/social-1.jpg' %}" style="width:100%; height:100%;"
+                             alt="Social picture"/>
+                    </div>
+                    <hr>
+                    <div class="row" style="margin: auto">
+                        <div class="myul">
+                            <li>
+                                <i class="fas fa-heart fa-lg"></i>
+                            </li>
+                            <li>
+                                <i class="fas fa-retweet fa-lg"></i>
+                            </li>
+
+                            <li>
+                                <i class="fas fa-comment-alt fa-lg"></i>
+                            </li>
+
+                            <li>
+                                <i class="fas fa-share-square fa-lg"></i>
+                            </li>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -9,12 +9,17 @@
                         <img class="user" width="100%" src="{{ User.profile.image.url }}">
                     </div>
                     <div class="col-md-9">
+                        {{ frequestButton }}
+
+
                         <h2>{{ User.profile.first_name }} {{ User.profile.last_name }}</h2>
                         <a href="{{ User.username }}">
                             <h3>@{{ User.username }}</h3>
                         </a>
+
                         <p class="text-secondary">{{ User.email }}</p>
                     </div>
+
                 </div>
                 {% if User == request.user %}
                     <div class="text-right">
@@ -47,7 +52,7 @@
                 {% endfor %}
             </div>
         </div>
-        {{ name }}'in etkinlikleri
+
         <div class="row">
 
 

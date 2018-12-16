@@ -1,11 +1,16 @@
 {% extends 'main/base.html' %}
 {% load static %}
+{% load event_extras %}
+
 {% block style %}
     <style>
+        /* - FIX Datepicker -*/
+        .bootstrap-datetimepicker-widget.dropdown-menu {
+            width: 250px;
+        }
 
         body {
             background-color: #29abe2;
-            font-family: 'Open Sans', sans-serif;
         }
 
         span {
@@ -68,18 +73,68 @@
 
 
             <div class="col-md-3">
+
                 <div class="card">
                     <img class="card-img-top" width="100%" src="{{ user.profile.image.url }}">
                     <div class="card-body">
 
-                        <p>{{ user.profile.first_name }} {{ user.profile.last_name }}</p>
-                        <p class="text-secondary">@{{ user.username }}</p>
-                        <p class="text-secondary">{{ user.email }}</p>
+                        {{ user.profile.first_name }} {{ user.profile.last_name }}
+                        @{{ user.username }}
+                        {{ user.email }}
 
                     </div>
                 </div>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-6">
+                <button type="button" data-toggle="collapse" data-target="#form"
+                        class="btn btn-primary btn-lg btn-block">Create Event
+                </button>
+                <hr>
+                <div class="collapse" id="form">
+                    <div class="card card-body">
+                        <form method="post" action="{% url 'createEvent' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label></label>
+                                <div class="input-group">
+
+                                    <input id="title" name="title" placeholder="Event Title" type="text"
+                                           class="form-control here" required="required">
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <div class="input-group">
+
+                                    <input id="location" name="location" placeholder="Location" type="text"
+                                           class="form-control here" required="required">
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <div class="input-group">
+
+                                    <input id="description" name="description" placeholder="Description" type="text"
+                                           class="form-control here">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input datetimepicker"
+                                           data-target="#datetimepicker1" name="datetimepicker1"/>
+                                    <span class="input-group-addon" data-target="#datetimepicker1"
+                                          data-toggle="datetimepicker">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button name="submit" type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                    <hr>
+                </div>
                 {% for event in events %}
 
                     <div class="row box">
@@ -95,15 +150,20 @@
                                     <span class="s"
                                           style="display: block;margin-top:0px;">{{ event.owner.profile.first_name }}</span>
                                     <span class="sm">15 ortak arkadaş</span>
-                                    <span class="sm">{{ event.time }}</span>
+                                    <a href="/event/{{ event.id }}">
+                                        <span class="sm">{{ event.time }}</span>
+                                    </a>
                                 </div>
                                 <div style="padding-top:10.75px;">
+                                    {% joinbutton event request.user.profile %}
 
-                                    <button id="Button1" style="height:42.5px; width:90px" class="btn btn-info">
-                                        <i class="fas fa-american-sign-language-interpreting fa-lg"></i> Join
-                                    </button>
 
                                 </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+
+                                <h4>{{ event.title }}</h4>
                             </div>
                             <div class="row">
                                 <p>
@@ -111,24 +171,18 @@
                                 </p>
                                 <img src="{% static 'main/img/social-1.jpg' %}" style="width:100%; height:100%;"
                                      alt="Social picture"/>
+
                             </div>
                             <hr>
-                            <div class="row" style="margin: auto">
+                            <div class="row">
+                                <h5>Participants:</h5>
                                 <div class="myul">
-                                    <li>
-                                        <i class="fas fa-heart fa-lg"></i>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-retweet fa-lg"></i>
-                                    </li>
-
-                                    <li>
-                                        <i class="fas fa-comment-alt fa-lg"></i>
-                                    </li>
-
-                                    <li>
-                                        <i class="fas fa-share-square fa-lg"></i>
-                                    </li>
+                                    {% for participant in event.participants.all %}
+                                        <li>
+                                            <img width="25px" src="{{ participant.image.url }}">
+                                            {{ participant.fullname }}
+                                        </li>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -165,22 +219,23 @@
 
             </div>
             <div class="col-md-3">
-            <!--
+                <h2>Upcoming Events</h2>
                 {% for event in eventsUserParticipate %}
                     <div class="card">
 
                         <div class="card-header">
-                            Sahibi : {{ event.owner.profile.first_name }}<br>{{ event.title }} <br>
-                            Tarih: {{ event.time }} </div>
-                        <div class="card-body">Katılanlar:<br>
+                            EventOwner : {{ event.owner.profile.first_name }}<br>{{ event.title }} <br>
+                            Date: {{ event.time }} </div>
+                        <div class="card-body">Participants:<br>
                             {% for participant in event.participants.all %}
                                 {{ participant.first_name }} {{ participant.last_name }}
                             {% endfor %}
                         </div>
                     </div>
                     <br>
-                {% endfor %}-->
+                {% endfor %}
             </div>
         </div>
     </div>
 {% endblock %}
+

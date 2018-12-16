@@ -14,6 +14,27 @@ class Profile(models.Model):
     def __str__(self):
         return self.first_name + " " + self.last_name + " @" + self.user.username
 
+    def fullname(self):
+        return self.first_name + " " + self.last_name
+
+    def requests(self):
+        return FriendRequest.objects.filter(to_profile=self)
+
+
+class FriendRequest(models.Model):
+    from_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='sender')
+    to_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='receiver')
+
+    def accept(self, user):
+        user.profile.friends.add(self.from_profile)
+        self.delete()
+
+    def reject(self):
+        self.delete()
+
+    def __str__(self):
+        return self.from_profile.user.username + ' to ' + self.to_profile.user.username
+
 
 class EventOwner(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, null=True)
@@ -30,7 +51,7 @@ class Event(models.Model):
     owner = models.ForeignKey(EventOwner, on_delete=models.CASCADE, null=True)
     location = models.CharField(max_length=150)
     participants = models.ManyToManyField(Profile, blank=True)
-    description = models.TextField(blank=True,null=True)
+    description = models.TextField(blank=True, null=True)
     url = models.CharField(max_length=500, blank=True, null=True)
 
     def __str__(self):
