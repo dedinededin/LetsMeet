@@ -189,11 +189,11 @@ def createEvent(request):
         title = request.POST.get('title')
         location = request.POST.get('location')
         description = request.POST.get('description')
-        time = request.POST.get('datetimepicker1')
-        time = '2018-12-15 10:30'
+        time = request.POST.get('datetimepicker')
+        url = request.POST.get('url')
         owner = EventOwner.objects.get(profile=request.user.profile)
         event = Event(title=title, location=location, description=description, owner=owner, time=time,
-                      createdTime=datetime.datetime.now())
+                      createdTime=datetime.datetime.now(), url=url)
         event.save()
         print(title, location, description, time)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

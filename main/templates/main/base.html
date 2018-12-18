@@ -96,7 +96,7 @@
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         {% if user.is_superuser %}
-                            <a class="dropdown-item" href="/admin">Admin Panel</a>
+                            <a class="dropdown-item" href="/admin/">Admin Panel</a>
                         {% endif %}
                         <a class="dropdown-item" href="{{ user.username }}">Profile Settings</a>
                         <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
@@ -180,7 +180,10 @@
 
 <script>
     $(function () {
-        $('.datetimepicker').datetimepicker();
+        $('.datetimepicker').datetimepicker({
+
+
+        });
     });
 </script>
 {% block script %}
