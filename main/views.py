@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 import datetime
+
 from django.utils.safestring import mark_safe
 
 
@@ -15,11 +16,15 @@ from django.utils.safestring import mark_safe
 
 def index(request):
     if request.user.is_authenticated:
+
         profile = request.user.profile
         friends = profile.friends.all()
         owner_friends = EventOwner.objects.filter(profile__in=friends)
-        friends_events = Event.objects.filter(owner__in=owner_friends.all())
-        user_events = Event.objects.filter(owner=EventOwner.objects.get(profile=profile))
+
+        today = datetime.datetime.today()
+
+        friends_events = Event.objects.filter(owner__in=owner_friends.all()).filter(time__gte=today)
+        user_events = Event.objects.filter(owner=EventOwner.objects.get(profile=profile)).filter(time__gte=today)
         events = friends_events.union(user_events)
 
         eventsUserParticipate = Event.objects.filter(participants=request.user.profile).order_by('-time').reverse()
@@ -113,17 +118,16 @@ def profile(request, username):
     context = {'home': 'active', 'User': user, 'friends': friends,
                'name': profile.first_name + " " + profile.last_name}
 
+
     if request.user.is_authenticated:
         events = Event.objects.filter(owner__in=owner)
         context['events'] = events
 
-        # wordList = list(filter(lambda a: a[index] == char, wordList))
         isFriend = False
         for friend in friends:
             if friend == request.user.profile:
                 isFriend = True
                 break
-        print(isFriend)
 
         if not isFriend:
             button = '<a href="/invite/{}">' \
@@ -133,6 +137,13 @@ def profile(request, username):
         else:
             button = '<a href="/invite/del/{}">' \
                      '<button type="button" class="btn btn-danger float-right">Delete Friend</button>' \
+                     '</a>'.format(profile.id)
+            context['frequestButton'] = mark_safe(button)
+
+        frequests = FriendRequest.objects.filter(from_profile=request.user.profile, to_profile=profile)
+        if frequests.count() > 0:
+            button = '<a href="">' \
+                     '<button type="button" class="btn btn-primary float-right" disabled>Request Sent</button>' \
                      '</a>'.format(profile.id)
             context['frequestButton'] = mark_safe(button)
 
@@ -162,7 +173,7 @@ def acceptfriend(request, pk):
 
 def deletefriend(request, pk):
     profile = get_object_or_404(Profile, pk=pk)
-    request.user.profile.friends.delete(profile)
+    request.user.profile.friends.remove(profile)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 

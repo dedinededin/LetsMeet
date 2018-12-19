@@ -21,6 +21,8 @@ class Profile(models.Model):
         return FriendRequest.objects.filter(to_profile=self)
 
 
+
+
 class FriendRequest(models.Model):
     from_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='sender')
     to_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='receiver')

@@ -1,0 +1,54 @@
+{% extends "main/base.html" %}
+{% block style %}
+    <style>
+        .user {
+            border-radius: 5px;
+            border-style: groove;
+        }
+    </style>
+{% endblock %}
+<!---->
+{% block content %}
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <img class="user" width="250px" src="{{ user.profile.image.url }}">
+                    </div>
+                    <div class="col-md-9">
+                        <h2>{{ user.profile.first_name }} {{ user.profile.last_name }}</h2>
+                        <h3 class="text-secondary">@{{ user.username }}</h3>
+                        <p class="text-secondary">{{ user.email }}</p>
+                    </div>
+                </div>
+
+                <div class="text-right">
+                    <a class="btn btn-primary" data-toggle="collapse" href="#collapseProfile" role="button">Edit
+                        Profile</a>
+                </div>
+            </div>
+            <div class="collapse" id="collapseProfile">
+                <div class="card-footer">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <fieldset class="form-group">
+                            <legend class="border-bottom mb-4">Profile Info</legend>
+                            {{ u_form.as_ul }}
+                            {{ p_form.as_ul }}
+                        </fieldset>
+                        <div class="form-group">
+                            <button class="btn btn-info" type="submit">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+{% endblock content %}
