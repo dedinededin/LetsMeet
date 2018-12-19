@@ -4,10 +4,6 @@
 
 {% block style %}
     <style>
-        /* - FIX Datepicker -*/
-        .bootstrap-datetimepicker-widget.dropdown-menu {
-            width: 250px;
-        }
 
         body {
             background-color: #29abe2;
@@ -49,12 +45,6 @@
             border-color: #d7d7d7;
         }
 
-        .row p {
-            margin-bottom: 0px !important;
-            padding: 20px 10px 10px 10px;
-            font-size: 13px;
-        }
-
         hr {
             border: 0px !important;
         }
@@ -65,23 +55,165 @@
         .down {
             float: right;
         }
+
+        .twPc-div {
+            background: #fff none repeat scroll 0 0;
+            border: 1px solid #e1e8ed;
+            border-radius: 6px;
+            height: 200px;
+            max-width: 340px;
+        / / orginal twitter width: 290 px;
+        }
+
+        .twPc-bg {
+            background-image: url("https://pbs.twimg.com/profile_banners/50988711/1384539792/600x200");
+            background-position: 0 50%;
+            background-size: 100% auto;
+            border-bottom: 1px solid #e1e8ed;
+            border-radius: 4px 4px 0 0;
+            height: 95px;
+            width: 100%;
+        }
+
+        .twPc-block {
+            display: block !important;
+        }
+
+        .twPc-button {
+            margin: -35px -10px 0;
+            text-align: right;
+            width: 100%;
+        }
+
+        .twPc-avatarLink {
+            background-color: #fff;
+            border-radius: 6px;
+            display: inline-block !important;
+            float: left;
+            margin: -30px 5px 0 8px;
+            max-width: 100%;
+            padding: 1px;
+            vertical-align: bottom;
+        }
+
+        .twPc-avatarImg {
+            border: 2px solid #fff;
+            border-radius: 7px;
+            box-sizing: border-box;
+            color: #fff;
+            height: 72px;
+            width: 72px;
+        }
+
+        .twPc-divUser {
+            margin: 5px 0 0;
+        }
+
+        .twPc-divName {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 21px;
+        }
+
+        .twPc-divName a {
+            color: inherit !important;
+        }
+
+        .twPc-divStats {
+            margin-left: 11px;
+            padding: 10px 0;
+        }
+
+        .twPc-Arrange {
+            box-sizing: border-box;
+            display: table;
+            margin: 0;
+            min-width: 100%;
+            padding: 0;
+            table-layout: auto;
+        }
+
+        ul.twPc-Arrange {
+            list-style: outside none none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .twPc-ArrangeSizeFit {
+            display: table-cell;
+            padding: 0;
+            vertical-align: top;
+        }
+
+        .twPc-ArrangeSizeFit a:hover {
+            text-decoration: none;
+        }
+
+        .twPc-StatValue {
+            display: block;
+            font-size: 18px;
+            font-weight: 500;
+            transition: color 0.15s ease-in-out 0s;
+        }
+
+        .twPc-StatLabel {
+            color: #8899a6;
+            font-size: 10px;
+            letter-spacing: 0.02em;
+            overflow: hidden;
+            text-transform: uppercase;
+            transition: color 0.15s ease-in-out 0s;
+        }
     </style>
 {% endblock %}
 {% block content %}
     <div class="container">
+
         <div class="row">
-
-
             <div class="col-md-3">
 
-                <div class="card">
-                    <img class="card-img-top" width="100%" src="{{ user.profile.image.url }}">
-                    <div class="card-body">
+                <div class="twPc-div">
+                    <a class="twPc-bg twPc-block"></a>
 
-                        {{ user.profile.first_name }} {{ user.profile.last_name }}
-                        @{{ user.username }}
-                        {{ user.email }}
+                    <div>
+                        <a title="{{ request.user.profile.fullname }}" href="https://twitter.com/mertskaplan"
+                           class="twPc-avatarLink">
+                            <img alt="Mert S. Kaplan"
+                                 src="{{ request.user.profile.image.url }}"
+                                 class="twPc-avatarImg">
+                        </a>
 
+                        <div class="twPc-divUser">
+                            <div class="twPc-divName">
+                                <a href="/{{ request.user.username }}">{{ request.user.profile.fullname }}</a>
+                            </div>
+                            <span>
+				<a href="/{{ request.user.username }}">@<span>{{ request.user.username }}</span></a>
+			</span>
+                        </div>
+
+                        <div class="twPc-divStats">
+                            <ul class="twPc-Arrange">
+                                <li class="twPc-ArrangeSizeFit">
+                                    <a href="/{{ request.user.username }}">
+                                        <span class="twPc-StatLabel twPc-block">Events</span>
+                                        <span class="twPc-StatValue">{{ request.user.profile.events.count }}</span>
+                                    </a>
+                                </li>
+                                <li class="twPc-ArrangeSizeFit">
+                                    <a href="/{{ request.user.username }}">
+                                        <span class="twPc-StatLabel twPc-block">Joined Events</span>
+                                        <span class="twPc-StatValue">{{ request.user.profile.participated.count }}</span>
+                                    </a>
+                                </li>
+                                <li class="twPc-ArrangeSizeFit">
+                                    <a href="{% url 'friends' %}">
+                                        <span class="twPc-StatLabel twPc-block">Friends</span>
+                                        <span class="twPc-StatValue">{{ request.user.profile.friends.count }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -122,7 +254,7 @@
                                 <div class="input-group date" id="datetimepicker" data-target-input="nearest">
                                     <input placeholder="Date Time: YYYY-MM-DD HH:MM" type="text" class="form-control"
                                            data-target="#datetimepicker" name="datetimepicker"/>
-                                    
+
                                 </div>
                             </div>
                             <div class="form-group">
@@ -149,12 +281,18 @@
                             <div class="row">
                                 <div style="max-width:80px;padding-right:10px;"
                                      class="col-lg-2 col-md-62 col-sm-2 col-xs-4 ">
-                                    <img src="{{ event.owner.profile.image.url }}" width="60px">
+                                    <a href="/{{ event.owner.profile.user.username }}">
+                                        <img src="{{ event.owner.profile.image.url }}" width="60px">
+                                    </a>
                                 </div>
                                 <div class="col-md-7">
                                     <span class="s"
-                                          style="display: block;margin-top:0px;">{{ event.owner.profile.first_name }}</span>
-                                    
+                                          style="display: block;margin-top:0px;">
+                                        <a href="/{{ event.owner.profile.user.username }}">
+                                        {{ event.owner.profile.fullname }}
+                                        </a>
+                                    </span>
+
                                     <a href="/event/{{ event.id }}">
                                         <span class="sm">{{ event.time }}</span>
                                     </a>
@@ -166,76 +304,79 @@
                                 </div>
                             </div>
                             <hr>
+
+                            <a href="/event/{{ event.id }}">
+                                {{ event.title }}
+                            </a>
+                            <p>
+                                {{ event.description }}
+                            </p>
                             <div class="row">
 
-                                <h4>{{ event.title }}</h4>
-                            </div>
-                            <div class="row">
-                                <p>
-                                    {{ event.description }}
-                                </p>
                                 <img src="{{ event.url }}" style="width:100%; height:100%;"
                                      alt="Social picture"/>
 
                             </div>
                             <hr>
-                            <div class="row">
-                                <h5>Participants:</h5>
-                                <div class="myul">
-                                    {% for participant in event.participants.all %}
-                                        <li>
-                                            <img width="25px" src="{{ participant.image.url }}">
-                                            {{ participant.fullname }}
-                                        </li>
-                                    {% endfor %}
+                            {% if event.participants.count > 0 %}
+                                <div class="row">
+                                    <h5>Participants:</h5>
+                                    <div class="myul">
+                                        {% for participant in event.participants.all %}
+                                            <li>
+                                                <img width="25px" src="{{ participant.image.url }}">
+                                                {{ participant.fullname }}
+                                            </li>
+                                        {% endfor %}
+                                    </div>
                                 </div>
-                            </div>
+                            {% else %}
+                                <div class="row">
+                                    <h5>Participants:</h5>
+                                    <div class="myul">
+                                        <li>
+                                            There is no participants :(
+                                        </li>
+
+                                    </div>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    <!--
-                    <div class="card">
-
-                        <div class="card-header">
-                            Sahibi : {{ event.owner.profile.first_name }}<br>{{ event.title }} <br>
-                            Tarih: {{ event.time }} </div>
-                        <div class="card-body">Katılanlar:<br>
-                            {% for participant in event.participants.all %}
-                                {{ participant.first_name }} {{ participant.last_name }}
-                            {% endfor %}
-                        </div>
-                    </div> -->
                     <br>
                 {% endfor %}
 
             </div>
             <div class="col-md-3">
-                <h2>Upcoming Events</h2>
                 {% for event in eventsUserParticipate %}
                     <div class="card">
-
                         <div class="card-header">
-                            EventOwner : {{ event.owner.profile.first_name }}<br>{{ event.title }} <br>
-                            Date: {{ event.time }} </div>
-                        <div class="card-body">Participants:<br>
-                            {% for participant in event.participants.all %}
-                                {{ participant.first_name }} {{ participant.last_name }}
-                            {% endfor %}
+                            <div class="row">
+                                <div class="col-3">
+                                    <img src="{{ event.owner.profile.image.url }}" width="100%">
+                                </div>
+                                <div class="col-9">
+                                    <a href="/{{ event.owner.profile.user.username }}">
+                                        <b>{{ event.owner.profile.fullname }}</b>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
+                        <div class="card-body">
+                            <a href="/event/{{ event.id }}">
+                                {{ event.title }}</a>
+                            <br>
+                            <img src="{{ event.url }}" width="100%">
+                        </div>
+                        <div class="card-footer">
+                            {{ event.time }}
+                        </div>
+                        <!--
+                        <div class="card-footer">Participants:<br>
+                            {% for participant in event.participants.all %}
+                                <a href="/{{ participant.user.username }}">{{ participant.first_name }}</a>
+                            {% endfor %}
+                        </div>-->
                     </div>
                     <br>
                 {% endfor %}

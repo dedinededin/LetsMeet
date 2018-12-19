@@ -80,43 +80,55 @@
                         <div class="col-md-7">
                                     <span class="s"
                                           style="display: block;margin-top:0px;">{{ event.owner.profile.first_name }}</span>
-                            <span class="sm">15 ortak arkadaş</span>
+
                             <a href="/event/{{ event.id }}">
                                 <span class="sm">{{ event.time }}</span>
                             </a>
                         </div>
                         <div style="padding-top:10.75px;">
-
                             {% joinbutton event request.user.profile %}
+
 
                         </div>
                     </div>
+                    <hr>
+
+                    <a href="/event/{{ event.id }}">
+                        <h4>{{ event.title }}</h4>
+                    </a>
+
                     <div class="row">
                         <p>
                             {{ event.description }}
                         </p>
-                        <img src="{% static 'main/img/social-1.jpg' %}" style="width:100%; height:100%;"
+                        <img src="{{ event.url }}" style="width:100%; height:100%;"
                              alt="Social picture"/>
+
                     </div>
                     <hr>
-                    <div class="row" style="margin: auto">
-                        <div class="myul">
-                            <li>
-                                <i class="fas fa-heart fa-lg"></i>
-                            </li>
-                            <li>
-                                <i class="fas fa-retweet fa-lg"></i>
-                            </li>
-
-                            <li>
-                                <i class="fas fa-comment-alt fa-lg"></i>
-                            </li>
-
-                            <li>
-                                <i class="fas fa-share-square fa-lg"></i>
-                            </li>
+                    {% if event.participants.count > 0 %}
+                        <div class="row">
+                            <h5>Participants:</h5>
+                            <div class="myul">
+                                {% for participant in event.participants.all %}
+                                    <li>
+                                        <img width="25px" src="{{ participant.image.url }}">
+                                        {{ participant.fullname }}
+                                    </li>
+                                {% endfor %}
+                            </div>
                         </div>
-                    </div>
+                    {% else %}
+                        <div class="row">
+                            <h5>Participants:</h5>
+                            <div class="myul">
+                                <li>
+                                    There is no participants :(
+                                </li>
+
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

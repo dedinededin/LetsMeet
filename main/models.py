@@ -20,7 +20,11 @@ class Profile(models.Model):
     def requests(self):
         return FriendRequest.objects.filter(to_profile=self)
 
+    def events(self):
+        return Event.objects.filter(owner=EventOwner.objects.get(profile=self))
 
+    def participated(self):
+        return Event.objects.filter(participants=self).order_by('-time').reverse()
 
 
 class FriendRequest(models.Model):
