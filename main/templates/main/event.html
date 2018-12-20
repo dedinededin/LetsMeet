@@ -79,11 +79,11 @@
                         </div>
                         <div class="col-md-7">
                                     <span class="s"
-                                          style="display: block;margin-top:0px;">{{ event.owner.profile.first_name }}</span>
+                                          style="display: block;margin-top:0px;">{{ event.owner.profile.fullname }}</span>
 
-                            <a href="/event/{{ event.id }}">
+
                                 <span class="sm">{{ event.time }}</span>
-                            </a>
+
                         </div>
                         <div style="padding-top:10.75px;">
                             {% joinbutton event request.user.profile %}
@@ -93,9 +93,9 @@
                     </div>
                     <hr>
 
-                    <a href="/event/{{ event.id }}">
+
                         <h4>{{ event.title }}</h4>
-                    </a>
+
 
                     <div class="row">
                         <p>
