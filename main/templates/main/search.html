@@ -1,0 +1,27 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        {% if results is None %}
+            <div class="card">
+                <div class="card-body">
+                    No users found :(
+                </div>
+            </div>
+        {% endif %}
+        {% for result in results %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-1 col-s-1">
+                            <img src="{{ result.image.url }}" width="100%">
+                        </div>
+                        <a href="{{ result.user.username }}">{{ result.fullname }}</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

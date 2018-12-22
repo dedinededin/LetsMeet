@@ -118,7 +118,6 @@ def profile(request, username):
     context = {'home': 'active', 'User': user, 'friends': friends,
                'name': profile.first_name + " " + profile.last_name}
 
-
     if request.user.is_authenticated:
         events = Event.objects.filter(owner__in=owner)
         context['events'] = events
@@ -133,6 +132,7 @@ def profile(request, username):
             button = '<a href="/invite/{}">' \
                      '<button type="button" class="btn btn-primary float-right">Add Friend</button>' \
                      '</a>'.format(profile.id)
+            context['events'] = None
             context['frequestButton'] = mark_safe(button)
         else:
             button = '<a href="/invite/del/{}">' \
@@ -145,6 +145,7 @@ def profile(request, username):
             button = '<a href="">' \
                      '<button type="button" class="btn btn-primary float-right" disabled>Request Sent</button>' \
                      '</a>'.format(profile.id)
+            context['events'] = None
             context['frequestButton'] = mark_safe(button)
 
         if username == request.user.username:
@@ -208,3 +209,26 @@ def createEvent(request):
         event.save()
         print(title, location, description, time)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def deleteEvent(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+    if event.owner.profile == request.user.profile:
+        event.delete()
+    return redirect('home')
+
+
+def search(request):
+    if request.method == 'POST':
+        keyword = str(request.POST.get('keyword'))
+        words = keyword.split(" ")
+
+        results = None
+        if (len(keyword) > 2):
+            for word in words:
+                username = Profile.objects.filter(user__username__contains=word)
+                profile = Profile.objects.filter(first_name__contains=word) | Profile.objects.filter(
+                    last_name__contains=word)
+                results = username.union(profile)
+        context = {'results': results}
+        return render(request, 'main/search.html', context)
