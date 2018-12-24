@@ -165,37 +165,37 @@ def addfriend(request, pk):
     frequest.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-
+@login_required()
 def acceptfriend(request, pk):
     to_accept = FriendRequest.objects.get(pk=pk)
     to_accept.accept(request.user)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-
+@login_required()
 def deletefriend(request, pk):
     profile = get_object_or_404(Profile, pk=pk)
     request.user.profile.friends.remove(profile)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-
+@login_required()
 def rejectfriend(request, pk):
     to_reject = FriendRequest.objects.get(pk=pk)
     to_reject.reject()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-
+@login_required()
 def join(request, pk):
     event = get_object_or_404(Event, pk=pk)
     event.participants.add(request.user.profile)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-
+@login_required()
 def unjoin(request, pk):
     event = get_object_or_404(Event, pk=pk)
     event.participants.remove(request.user.profile)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-
+@login_required()
 def createEvent(request):
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -210,14 +210,14 @@ def createEvent(request):
         print(title, location, description, time)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-
+@login_required()
 def deleteEvent(request, pk):
     event = get_object_or_404(Event, pk=pk)
     if event.owner.profile == request.user.profile:
         event.delete()
     return redirect('home')
 
-
+@login_required()
 def search(request):
     if request.method == 'POST':
         keyword = str(request.POST.get('keyword'))
