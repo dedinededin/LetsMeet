@@ -230,5 +230,5 @@ def search(request):
                 profile = Profile.objects.filter(first_name__contains=word) | Profile.objects.filter(
                     last_name__contains=word)
                 results = username.union(profile)
-        context = {'results': results}
+        context = {'results': results, 'friendRequests': request.user.profile.requests()}
         return render(request, 'main/search.html', context)

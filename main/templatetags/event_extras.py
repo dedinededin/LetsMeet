@@ -38,3 +38,4 @@ def joinbuttonmaker(event, profile):
         return mark_safe(join)
     else:
         return mark_safe("")
+
