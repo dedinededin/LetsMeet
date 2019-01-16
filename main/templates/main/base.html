@@ -44,6 +44,7 @@
                     <a class="nav-item nav-link {{ friends }}" href="{% url 'friends' %}">Friends</a>
                 {% endif %}
             </ul>
+            {% if user.is_authenticated %}
             <form method="post" action="/search" class="form-inline my-2 my-lg-0">
                 {% csrf_token %}
                     <input name='keyword' id='keyword' class="form-control mr-sm-1" type="search" placeholder="Search"
@@ -51,7 +52,8 @@
 
                     <button class="btn btn-secondary my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button>
 
-            </form> &nbsp;
+            </form> &nbsp
+        {% endif %}
 
             <ul class="navbar-nav">
                 {% if user.is_authenticated %}

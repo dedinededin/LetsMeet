@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Profile, Event, EventOwner, FriendRequest
-from .forms import UserCreationForm, UserUpdateForm, ProfileUpdateForm, NewEventForm
+from .forms import UserCreationForm, UserUpdateForm, ProfileUpdateForm, NewEventForm, EventEditForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from main.cinema_controller import get_films
@@ -25,9 +25,10 @@ def index(request):
 
         friends_events = Event.objects.filter(owner__in=owner_friends.all()).filter(time__gte=today)
         user_events = Event.objects.filter(owner=EventOwner.objects.get(profile=profile)).filter(time__gte=today)
-        events = friends_events.union(user_events)
+        events = friends_events.union(user_events).order_by('-time').reverse()
 
-        eventsUserParticipate = Event.objects.filter(participants=request.user.profile).order_by('-time').reverse()
+        eventsUserParticipate = Event.objects.filter(participants=request.user.profile).filter(
+            time__gte=today).order_by('-time').reverse()
 
         context = {'home': 'active',
                    'events': events,
@@ -44,6 +45,9 @@ def index(request):
 def event(request, pk):
     event = get_object_or_404(Event, pk=pk)
     context = {'event': event}
+    if event.owner.profile == request.user.profile:
+        form = EventEditForm(instance=event)
+        context['form'] = form
 
     return render(request, 'main/event.html', context)
 
@@ -149,6 +153,8 @@ def profile(request, username):
             context['frequestButton'] = mark_safe(button)
 
         if username == request.user.username:
+            events = Event.objects.filter(owner__in=owner)
+            context['events'] = events
             context['frequestButton'] = ""
             u_form = UserUpdateForm(instance=request.user)
             p_form = ProfileUpdateForm(instance=request.user.profile)
@@ -165,11 +171,13 @@ def addfriend(request, pk):
     frequest.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 @login_required()
 def acceptfriend(request, pk):
     to_accept = FriendRequest.objects.get(pk=pk)
     to_accept.accept(request.user)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 @login_required()
 def deletefriend(request, pk):
@@ -177,11 +185,13 @@ def deletefriend(request, pk):
     request.user.profile.friends.remove(profile)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 @login_required()
 def rejectfriend(request, pk):
     to_reject = FriendRequest.objects.get(pk=pk)
     to_reject.reject()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 @login_required()
 def join(request, pk):
@@ -189,11 +199,13 @@ def join(request, pk):
     event.participants.add(request.user.profile)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 @login_required()
 def unjoin(request, pk):
     event = get_object_or_404(Event, pk=pk)
     event.participants.remove(request.user.profile)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 @login_required()
 def createEvent(request):
@@ -210,12 +222,14 @@ def createEvent(request):
         print(title, location, description, time)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 @login_required()
 def deleteEvent(request, pk):
     event = get_object_or_404(Event, pk=pk)
     if event.owner.profile == request.user.profile:
         event.delete()
     return redirect('home')
+
 
 @login_required()
 def search(request):

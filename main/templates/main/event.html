@@ -65,6 +65,7 @@
     </style>
 {% endblock %}
 {% block content %}
+    {% if not form %}
     <div class="container">
         <div class="row">
 
@@ -133,4 +134,77 @@
             </div>
         </div>
     </div>
+    {% endif %}
+    {% if form %}
+    <div class="container">
+        <div class="row">
+
+            <div class="row box">
+                <div style="padding-top:10px;" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <i class="down fas fa-angle-down"></i>
+
+                    <div class="row">
+                        <div style="max-width:80px;padding-right:10px;"
+                             class="col-lg-2 col-md-62 col-sm-2 col-xs-4 ">
+                            <img src="{{ event.owner.profile.image.url }}" width="60px">
+
+                        </div>
+                        <div class="col-md-7">
+                                    <span class="s"
+                                          style="display: block;margin-top:0px;">{{ event.owner.profile.fullname }}</span>
+
+
+                                <span class="sm">{{ form.time }}</span>
+
+                        </div>
+                        <div style="padding-top:10px;">
+                            {% joinbutton event request.user.profile %}
+                            {% deletebutton event request.user.profile %}
+
+                        </div>
+                    </div>
+                    <hr>
+
+
+                        <h4>{{ form.title }}</h4>
+
+
+                    <div class="row">
+                        <p>
+                            {{ form.description }}
+                        </p>
+
+                    </div>
+                <br>
+                             {{ form.url }}
+                    <hr>
+                    {% if event.participants.count > 0 %}
+                        <div class="row">
+                            <h5>Participants:</h5>
+                            <div class="myul">
+                                {% for participant in event.participants.all %}
+                                    <li>
+                                        <img width="25px" src="{{ participant.image.url }}">
+                                        {{ participant.fullname }}
+                                    </li>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="row">
+                            <h5>Participants:</h5>
+                            <div class="myul">
+                                <li>
+                                    There is no participants :(
+                                </li>
+
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
 {% endblock %}
