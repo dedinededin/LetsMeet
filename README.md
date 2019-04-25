@@ -16,19 +16,9 @@ Prepared by:
 
 İbrahim Doğan - 11512112
 
-Burak Demirel - 115200034
-
-Engin Can Höke - 116202067
-
-Recep Goger - 114200078
-
-Kadir Akgül - 115200081
-
-  
 
 Semester: Fall 2018
 
-  
 
 Course: Software Engineering Consepts
 
